@@ -1,3 +1,5 @@
+*.pdf
+
 dist
 dist-*
 cabal-dev
