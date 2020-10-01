@@ -1,7 +1,7 @@
 # Haskell (INFO3)
 ## Listes
 
-**Question 1: Expressions de Liste*
+**Question 1: Expressions de Liste**
 1. Une liste s’ecrit entre crochets, avec les éléements de la liste séparés par des virgules. Rappelez ce que font les operateurs ``[]``, ``:`` et ``++``.
 * ``[]`` : Liste vide (aussi la fin de liste).
 * ``:`` : Opérateur d'ajout d'un élément au début d'une liste.
@@ -77,4 +77,29 @@ init' :: [a] -> [a]
 init' []	= error "empty list"
 init' [x] 	= []
 init' (x : xs) = x : init' xs
+```
+
+**Question 3: Chaînes de caractères**
+Un palindrome un mot dont l’ordre des lettres reste le meme qu’on le lise de gauche à droite
+ou de droite à gauche, comme dans la phrase "Esope reste ici et se repose".
+
+1. Comment tester si un mot (i.e., une chaîne de caractères sans caractère espace) est un
+palindrome ? (Accents et majuscules ne sont pas utilisés ici.)
+On divise la chaîne de caractères par deux (si longueur impaire, on ne tient pas compte du caractère du milieu) et on compare la première partie avec la deuxième partie en reversed.
+
+2. Comment tester si une chaîne de caracteres est un palindrome ? (Accents et majuscules ne sont pas utilisés ici mais le mot peut contenir des caractères espace dont il ne faut pas tenir compte.)
+On enlève les caractères espace et on refait la manip décrite ci-dessus.
+
+3. Ecrire une fonction qui teste si un mot est un palindrome ? (Accents et majuscules ne sont pas utilisés ici.) Quel doit être le type de cette fonction ?
+```haskell
+isPalindrome :: String -> Bool
+isPalindrome [] = error "empty string cannot be anything"
+isPalindrome [x] = True
+isPalindrome []
+```
+
+4. Ecrire une fonction qui teste si une chaîne de caractères est un palindrome ? (Accents et majuscules ne sont pas utilisés ici mais la chaîne peut contenir des caractères espace
+dont il ne faut pas tenir compte..) Quel doit être le type de cette fonction ?
+```haskell
+
 ```
