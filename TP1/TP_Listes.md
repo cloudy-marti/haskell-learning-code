@@ -46,6 +46,7 @@ head (drop (length - 1) lst)
 ```
 Donnez ensuite une version récursive de la fonction ``last``.
 ```haskell
+-- To be written in a file `Last.hs`
 last' :: [a] -> a
 last' []			= error "empty list"
 last' (_ : x : [])	= x
@@ -73,6 +74,7 @@ reverse(tail (reverse lst))
 ```
 Donner ensuite une version recursive de la fonction
 ```haskell
+-- To be written in a file `Init.hs`
 init' :: [a] -> [a]
 init' []	= error "empty list"
 init' [x] 	= []
@@ -92,14 +94,93 @@ On enlève les caractères espace et on refait la manip décrite ci-dessus.
 
 3. Ecrire une fonction qui teste si un mot est un palindrome ? (Accents et majuscules ne sont pas utilisés ici.) Quel doit être le type de cette fonction ?
 ```haskell
-isPalindrome :: String -> Bool
-isPalindrome [] = error "empty string cannot be anything"
-isPalindrome [x] = True
-isPalindrome []
+isPalindrome :: [a] -> Bool
+isPalindrome [] = error "empty string cannot be a palindrome"
+isPalindrome xs = xs == reverse xs
 ```
 
 4. Ecrire une fonction qui teste si une chaîne de caractères est un palindrome ? (Accents et majuscules ne sont pas utilisés ici mais la chaîne peut contenir des caractères espace
 dont il ne faut pas tenir compte..) Quel doit être le type de cette fonction ?
 ```haskell
+import Data.Char(isSpace)
+import Data.List
+trimmed = dropWhileEnd isSpace . dropWhile isSpace
 
+
+```
+
+**Question 4: Types**
+1. Quel est le type des valeurs suivantes :
+* [’a’,’b’,’c’] :: [Char]
+* [1, 2, 3] :: Num a => a
+* [[’a’,’b’],[’c’,’d’]] :: [[Char]]
+* [[’1’,’2’],[’3’,’4’]] :: Num a => [[a]]
+* (’a’,’b’) :: (Char, Char)
+* (’a’,’b’,’c’) :: (Char, Char, Char)
+* (1,2) :: Num a => (a, a)
+* (1,2,3) :: Num a => (a, a, a)
+* [(False,’0’),(True,’1’)] :: Num a => [(Bool, a)]
+* ([False,True],[’0’,’1’]) :: Num a => ([Bool], [a])
+* [tail,init,reverse] :: [[a] -> [a]]
+* ([tail,init,reverse],[take,drop]) :: ([[a1] -> [a1]], [Int -> [a2] -> [a2]])
+
+2. Expliquer la session suivante :
+```haskell
+>>>import Data.List
+>>>:type(head, take)(head, take)::([a]->a,Int ->[a1]->[a1])
+>>>:type[head, take]
+
+<interactive>:1:8:
+	Couldn’tmatchtype ’Int’with’[[a] ->[a]]’
+	Expected type:[[a]->[a]]->[a]->[a]
+	Actual type: Int ->[a]->[a]
+	In the expression:take
+	In the expression:[head, take]
+Prelude Data.List>
+```
+L'interpréteur râle car head et take ont des types différents. Un tuple admet des éléments de type différents tandis que la liste a besoin nécessairement d'éléments de même type.
+
+**Question 5: Fonctions**
+
+* second xs=head (tail xs)
+* appl (f,x)=f x
+* pair x y=(x,y)
+* mult x y=x*y
+* double=mult 2
+* palindrome xs=reverse xs == xs
+* twice f x=f (f x)
+* incrAll xs=map (+1) xs
+* norme xs=sqrt (sum (map f xs))wheref x=xˆ2.
+
+1. Calculez les types de ces fonctions, en n’oubliant pas les contraintes de classe.
+* second :: [a] -> a
+* appl :: (t1, t2, t1) -> t2
+* pair :: a1 -> a2 -> (a1, a2)
+* mult :: Num a => a -> a -> a
+* double :: Num a => a -> a
+* palindrome :: [a] -> Bool
+* twice :: (t -> t) -> t -> t
+* incrAll :: Num a => [a] -> [a]
+* norme :: Num a => [a] -> a
+
+2. Donnez une forme curifiée de la fonction appl.
+```haskell
+appl' f x = f x
+```
+
+3. Quelles sont les *fonctions d'ordre supérieur* ?
+Ce sont les fonctions qui prennent d'autres fonctions en paramètre : appl, twice
+
+4. Quelles sont les *fonctions polymorphes* ?
+Ce sont des fonctions dont les paramètres peuvent prendre plusieurs types.
+
+5. A l’aide d’une compréhension de liste, calculer la liste de carrés des entiers pairs (i.e.,les entiers $i^2$ pour i = 2,4,...).
+```haskell
+getSquareList xs = [x * x | x <- xs, mod x 2 == 0]
+
+getSquareList' xs = [x * x | x <- xs, even x]
+```
+6. A l’aide d’une compréhension de liste, calculer la liste : ``[[1],[1,2],[1,2,3],[1,2,3,4],[1,2,3,4,5]]``
+```haskell
+[[x]]
 ```
