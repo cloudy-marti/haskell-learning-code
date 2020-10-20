@@ -145,7 +145,7 @@ L'interpréteur râle car head et take ont des types différents. Un tuple admet
 * second xs=head (tail xs)
 * appl (f,x)=f x
 * pair x y=(x,y)
-* mult x y=x*y
+* mult x y=x\*y
 * double=mult 2
 * palindrome xs=reverse xs == xs
 * twice f x=f (f x)
@@ -174,13 +174,89 @@ Ce sont les fonctions qui prennent d'autres fonctions en paramètre : appl, twic
 4. Quelles sont les *fonctions polymorphes* ?
 Ce sont des fonctions dont les paramètres peuvent prendre plusieurs types.
 
-5. A l’aide d’une compréhension de liste, calculer la liste de carrés des entiers pairs (i.e.,les entiers $i^2$ pour i = 2,4,...).
+**Question 6: Compréhensions de listes**
+
+1. A l’aide d’une compréhension de liste, calculer la liste de tous entiers positifs impairs.
+```haskell
+take 10 [x | x <- [1..], odd x]
+```
+2. A l’aide d’une compréhension de liste, calculer la liste de carrés des entiers pairs (i.e.,les entiers $i^2$ pour i = 2,4,...).
 ```haskell
 getSquareList xs = [x * x | x <- xs, mod x 2 == 0]
 
 getSquareList' xs = [x * x | x <- xs, even x]
 ```
-6. A l’aide d’une compréhension de liste, calculer la liste : ``[[1],[1,2],[1,2,3],[1,2,3,4],[1,2,3,4,5]]``
+3. A l’aide d’une compréhension de liste, calculer la liste : ``[[1],[1,2],[1,2,3],[1,2,3,4],[1,2,3,4,5]]``
 ```haskell
-[[x]]
+[[1..n] | n <- [1..5]]
+```
+4. A l’aide d’une compréhension de liste, calculer la liste des paires d’entiers (n, m)... :
+```haskell
+[(n, m) | n <- [1..20], m <- [n..20], sum [x | x <- [1..n]] == m ]
+```
+5. ) En arithmétique, un nombre parfait est un entier naturel n tel que σ(n) = 2n, ou σ(n) est la somme des diviseurs positifs de n. Cela revient a dire qu’un entier naturel est
+parfait s’il est egal à la moitié de la somme de ses diviseurs ou encore à la somme de ses diviseurs stricts. Ainsi 6 est un nombre parfait car 2 × 6 = 12 = 1 + 2 + 3 + 6, ou
+encore 6 = 1 + 2 + 3. Les trois premiers nombres parfaits sont
+* 6 = 1 + 2 + 3,
+* 28 = 1 + 2 + 4 + 7 + 14, et
+* 496 = 1 + 2 + 4 + 8 + 16 + 31 + 62 + 124 + 248.
+A l’aide d’une compréhension de liste, calculer la liste des nombres parfaits (et, par
+exemple, donner le quatrieme ; indice il s’agit de 8128). Existe-t-il un nombre parfait
+impair ?
+```haskell
+[(n, m) | n <- [1000.1300]
+		, m <- [n+1..1300]
+		, sum [div | div <- [1..n], n `mod` div == 0] == n+m
+		, sum [div | div <- [1..m], m `mod` div == 0] == n+m]
+```
+**Question 7: Fonctions simples**
+1. Ecrire une fonction permettant de compter le nombre d’éléments dans une liste (sans utiliser length bien sur !).
+```haskell
+lenght' [] = 0
+lenght' (_ : xs) = 1 + lenght' xs 
+```
+
+2. Ecrire une fonction permettant de renverser une liste (sans utiliser ´ reverse bien sur !)
+```haskell
+reverse' [] = []
+reverse = F.foldl (flip (:)) []
+```
+
+3. Ecrire une fonction permettant de calculer le nombre de voyelles dans une chaîne de caracteres. (Nous ne préoccupons pas des accents). 
+```haskell
+vowelNb xs = length [x | x <- xs, x `elem` ['a', 'e', 'i', 'o', 'u']]
+```
+
+4. La fonction splitAt de type ``Int -> [a] -> ([a], [a])`` retourne un couple de
+listes obtenu en cassant une liste a une position donnée.
+```
+>>> :type splitAt
+splitAt :: Int -> [a] -> ([a], [a])
+>>> splitAt 0 [1..10]
+([],[1,2,3,4,5,6,7,8,9,10])
+>>> splitAt 5 [1..10]
+([1,2,3,4,5],[6,7,8,9,10])
+>>> splitAt 10 [1..10]
+([1,2,3,4,5,6,7,8,9,10],[])
+>>> splitAt 3 []
+([],[])
+>>>
+```
+Proposez une implementation de splitAt.
+```haskell
+splitAt' n xs = (L.take n xs, L.drop n xs)
+```
+5. La suite de Fibonacci est une suite d’entiers dans laquelle chaque terme est la somme
+des deux termes qui le prec´ edent. Elle commence généeralement par les termes 0 et 1
+(parfois 1 et 1) et ses premiers termes sont : 0, 1, 1, 2, 3, 5, 8, 13, 21, . . . (suite A000045 de l’OEIS (On-Line Encyclopedia of Integer Sequences)). Ecrire une fonction ´ fibonacci de type ``fib :: (Num a1, Num a, Eq a) => a -> a1`` permettant de calculer
+un terme de la suite de fibonacci.
+```haskell
+fib 0 = 0
+fib 1 = 1
+fib n = fib (n-1) + fib (n-2)
+
+fib' n = L.head . L.drop n $ aux
+	where
+		aux = 0 : 1 : next aux
+		next (a : t@(b : _)) = (a+b) : next t
 ```
